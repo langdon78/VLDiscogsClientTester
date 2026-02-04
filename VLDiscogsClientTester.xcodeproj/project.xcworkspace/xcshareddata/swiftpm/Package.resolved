@@ -1,0 +1,42 @@
+{
+  "originHash" : "450e655d41f6f76757cebdd413f9e3a4e195f1230bef87553f9ff34c4d22eb4f",
+  "pins" : [
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "7b847a3b7008b2dc2f47ca3110d8c782fb2e5c7e",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "vlnetworkingclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/langdon78/VLNetworkingClient",
+      "state" : {
+        "revision" : "21cde46a6168522e52b7acb226e5b67bcf3d99aa",
+        "version" : "0.1.7-alpha"
+      }
+    },
+    {
+      "identity" : "vloauthflowcoordinator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/langdon78/VLOAuthFlowCoordinator",
+      "state" : {
+        "revision" : "98de87ad94af5378feb1cd8faf35523e25ea1fa1",
+        "version" : "0.3.1-alpha"
+      }
+    },
+    {
+      "identity" : "vloauthprovider",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/langdon78/VLOAuthProvider",
+      "state" : {
+        "revision" : "d80e2dc90436b46b1d941a0d17976a66e97d586e",
+        "version" : "0.3.4-alpha"
+      }
+    }
+  ],
+  "version" : 3
+}
