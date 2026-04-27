@@ -63,6 +63,8 @@ struct HomeMenu: View {
         switch item {
         case "Database":
             return Requests.database
+        case "Marketplace":
+            return Requests.marketplace
         case "User Collection":
             return Requests.userCollection
         default:

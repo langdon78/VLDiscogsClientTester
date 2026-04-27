@@ -114,6 +114,168 @@ struct Requests {
         ]
     ]
 
+    // MARK: - Marketplace-specific parameters
+
+    private static let listingIdParam = RequestParameter(
+        id: "listing_id", name: "Listing ID", location: .path, valueType: .int
+    )
+    private static let orderIdParam = RequestParameter(
+        id: "order_id", name: "Order ID", location: .path
+    )
+    private static let currAbbrParam = RequestParameter(
+        id: "curr_abbr", name: "Currency", location: .query, isRequired: false
+    )
+    private static let listingStatusParam = RequestParameter(
+        id: "status", name: "Status", location: .query,
+        valueType: .enumeration(["For Sale", "Draft", "Expired", "Sold", "Deleted"]),
+        isRequired: false
+    )
+    private static let conditionParam = RequestParameter(
+        id: "condition", name: "Condition", location: .body,
+        valueType: .enumeration([
+            "Mint (M)", "Near Mint (NM or M-)", "Very Good Plus (VG+)",
+            "Very Good (VG)", "Good Plus (G+)", "Good (G)",
+            "Fair (F)", "Poor (P)", "Not Graded"
+        ])
+    )
+    private static let sleeveConditionParam = RequestParameter(
+        id: "sleeve_condition", name: "Sleeve Condition", location: .body,
+        valueType: .enumeration([
+            "Mint (M)", "Near Mint (NM or M-)", "Very Good Plus (VG+)",
+            "Very Good (VG)", "Good Plus (G+)", "Good (G)",
+            "Fair (F)", "Poor (P)", "Not Graded", "Generic Sleeve"
+        ]),
+        isRequired: false
+    )
+    private static let orderStatusParam = RequestParameter(
+        id: "status", name: "Status", location: .query,
+        valueType: .enumeration([
+            "New Order", "Buyer Contacted", "Invoice Sent",
+            "Payment Pending", "Payment Received", "Shipped",
+            "Refund Sent", "Cancelled (Non-Paying Buyer)",
+            "Cancelled (Item Unavailable)", "Cancelled (Per Buyer's Request)", "Merged"
+        ]),
+        isRequired: false
+    )
+
+    // MARK: - Marketplace endpoints
+
+    static let marketplace: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "Inventory"): [
+            .init(id: 1, httpMethod: .get, path: "/users/{username}/inventory",
+                  parameters: [
+                    usernameParam,
+                    listingStatusParam,
+                    RequestParameter(
+                        id: "sort", name: "Sort", location: .query,
+                        valueType: .enumeration(["listed", "price", "item", "artist", "label", "catno", "audio", "status", "location"]),
+                        isRequired: false
+                    ),
+                    sortOrderParam, pageParam, perPageParam
+                  ])
+        ],
+        .init(id: 2, name: "Listing"): [
+            .init(id: 2, httpMethod: .get, path: "/marketplace/listings/{listing_id}",
+                  parameters: [listingIdParam, currAbbrParam]),
+            .init(id: 3, httpMethod: .post, path: "/marketplace/listings",
+                  parameters: [
+                    RequestParameter(id: "release_id", name: "Release ID", location: .body, valueType: .int),
+                    conditionParam,
+                    sleeveConditionParam,
+                    RequestParameter(id: "price", name: "Price", location: .body),
+                    RequestParameter(id: "status", name: "Status", location: .body,
+                                     valueType: .enumeration(["For Sale", "Draft"])),
+                    RequestParameter(id: "comments", name: "Comments", location: .body, isRequired: false),
+                    RequestParameter(id: "allow_offers", name: "Allow Offers", location: .body,
+                                     valueType: .enumeration(["true", "false"]), isRequired: false),
+                    RequestParameter(id: "location", name: "Location", location: .body, isRequired: false),
+                    RequestParameter(id: "weight", name: "Weight", location: .body, valueType: .int, isRequired: false),
+                    RequestParameter(id: "format_quantity", name: "Format Quantity", location: .body, valueType: .int, isRequired: false)
+                  ]),
+            .init(id: 4, httpMethod: .post, path: "/marketplace/listings/{listing_id}",
+                  parameters: [
+                    listingIdParam,
+                    RequestParameter(id: "release_id", name: "Release ID", location: .body, valueType: .int),
+                    conditionParam,
+                    sleeveConditionParam,
+                    RequestParameter(id: "price", name: "Price", location: .body),
+                    RequestParameter(id: "status", name: "Status", location: .body,
+                                     valueType: .enumeration(["For Sale", "Draft"])),
+                    RequestParameter(id: "comments", name: "Comments", location: .body, isRequired: false),
+                    RequestParameter(id: "allow_offers", name: "Allow Offers", location: .body,
+                                     valueType: .enumeration(["true", "false"]), isRequired: false),
+                    RequestParameter(id: "location", name: "Location", location: .body, isRequired: false),
+                    RequestParameter(id: "weight", name: "Weight", location: .body, valueType: .int, isRequired: false),
+                    RequestParameter(id: "format_quantity", name: "Format Quantity", location: .body, valueType: .int, isRequired: false)
+                  ]),
+            .init(id: 5, httpMethod: .delete, path: "/marketplace/listings/{listing_id}",
+                  parameters: [listingIdParam])
+        ],
+        .init(id: 3, name: "Orders"): [
+            .init(id: 6, httpMethod: .get, path: "/marketplace/orders",
+                  parameters: [
+                    orderStatusParam,
+                    RequestParameter(id: "archived", name: "Archived", location: .query,
+                                     valueType: .enumeration(["true", "false"]), isRequired: false),
+                    RequestParameter(
+                        id: "sort", name: "Sort", location: .query,
+                        valueType: .enumeration(["id", "buyer", "created", "status", "last_activity"]),
+                        isRequired: false
+                    ),
+                    sortOrderParam, pageParam, perPageParam
+                  ]),
+            .init(id: 7, httpMethod: .get, path: "/marketplace/orders/{order_id}",
+                  parameters: [orderIdParam]),
+            .init(id: 8, httpMethod: .post, path: "/marketplace/orders/{order_id}",
+                  parameters: [
+                    orderIdParam,
+                    RequestParameter(id: "status", name: "Status", location: .body,
+                                     valueType: .enumeration([
+                                        "New Order", "Buyer Contacted", "Invoice Sent",
+                                        "Payment Pending", "Payment Received", "Shipped",
+                                        "Refund Sent", "Cancelled (Non-Paying Buyer)",
+                                        "Cancelled (Item Unavailable)", "Cancelled (Per Buyer's Request)", "Merged"
+                                     ]),
+                                     isRequired: false),
+                    RequestParameter(id: "shipping", name: "Shipping Cost", location: .body, isRequired: false)
+                  ])
+        ],
+        .init(id: 4, name: "Order Messages"): [
+            .init(id: 9, httpMethod: .get, path: "/marketplace/orders/{order_id}/messages",
+                  parameters: [orderIdParam, pageParam, perPageParam]),
+            .init(id: 10, httpMethod: .post, path: "/marketplace/orders/{order_id}/messages",
+                  parameters: [
+                    orderIdParam,
+                    RequestParameter(id: "message", name: "Message", location: .body, isRequired: false),
+                    RequestParameter(id: "status", name: "Status", location: .body,
+                                     valueType: .enumeration([
+                                        "New Order", "Buyer Contacted", "Invoice Sent",
+                                        "Payment Pending", "Payment Received", "Shipped",
+                                        "Refund Sent", "Cancelled (Non-Paying Buyer)",
+                                        "Cancelled (Item Unavailable)", "Cancelled (Per Buyer's Request)", "Merged"
+                                     ]),
+                                     isRequired: false)
+                  ])
+        ],
+        .init(id: 5, name: "Fee"): [
+            .init(id: 11, httpMethod: .get, path: "/marketplace/fee/{price}",
+                  parameters: [RequestParameter(id: "price", name: "Price", location: .path)]),
+            .init(id: 12, httpMethod: .get, path: "/marketplace/fee/{price}/{currency}",
+                  parameters: [
+                    RequestParameter(id: "price", name: "Price", location: .path),
+                    RequestParameter(id: "currency", name: "Currency Code", location: .path)
+                  ])
+        ],
+        .init(id: 6, name: "Price Suggestions"): [
+            .init(id: 13, httpMethod: .get, path: "/marketplace/price_suggestions/{release_id}",
+                  parameters: [releaseIdParam])
+        ],
+        .init(id: 7, name: "Release Statistics"): [
+            .init(id: 14, httpMethod: .get, path: "/marketplace/stats/{release_id}",
+                  parameters: [releaseIdParam, currAbbrParam])
+        ]
+    ]
+
     // MARK: - User Collection endpoints
 
     static let userCollection: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
