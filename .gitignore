@@ -96,6 +96,9 @@ iOSInjectionProject/
 # Visual Studio Code
 .vscode/
 
+# Claude Code
+.claude/settings.local.json
+
 ## Environment variables and secrets
 .env
 .env.local
