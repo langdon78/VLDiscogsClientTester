@@ -6,102 +6,111 @@
 //
 
 import SwiftUI
-import VLDiscogsClient
 
 struct RequestTestView: View {
     @StateObject var viewModel: RequestTestViewModel
-    
+
     var body: some View {
-        ScrollView {
-        VStack(alignment: .leading) {
-            Text("Request")
-                .font(.title)
-            Text(viewModel.url?.absoluteString ?? "")
-                .font(.system(.body, design: .monospaced))
-                .textSelection(.enabled)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(16)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.black, lineWidth: 1)
-                )
-            HStack {
-                Spacer()
-                Button("Send") {
+        Form {
+            ParameterFormView(
+                parameters: viewModel.requestTemplate.parameters,
+                autoFillValues: viewModel.autoFillValues,
+                values: $viewModel.parameterValues
+            )
+
+            Section("URL Preview") {
+                Text(viewModel.buildResolvedUrl()?.absoluteString ?? "incomplete")
+                    .font(.system(.caption, design: .monospaced))
+                    .foregroundStyle(viewModel.buildResolvedUrl() != nil ? .primary : .secondary)
+                    .textSelection(.enabled)
+            }
+
+            Section {
+                Button {
                     Task {
-                        try await viewModel.getResponse()
+                        await viewModel.sendRequest()
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .padding(.trailing, 4)
+                        }
+                        Text("Send \(viewModel.requestTemplate.httpMethod.description)")
+                        Spacer()
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.blue)
+                .tint(viewModel.requestTemplate.httpMethod.color)
+                .disabled(!viewModel.isValid || viewModel.isLoading)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
             }
-            Spacer()
-            HStack {
-                Text("Response")
-                    .font(.title)
-                if !viewModel.statusCode.isEmpty {
-                    Text("\(viewModel.statusCode)")
-                        .font(.caption.bold())
-                        .padding(6)
-                        .background(.green)
-                        .cornerRadius(4)
-                        .foregroundColor(.white)
+
+            if let errorMessage = viewModel.errorMessage {
+                Section("Error") {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
                 }
             }
-            Text(getJson(from: viewModel.response))
-                    .font(.system(.body, design: .monospaced))
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.black, lineWidth: 1)
-                    )
+
+            if viewModel.statusCode != nil || !viewModel.response.isEmpty {
+                Section {
+                    HStack {
+                        Text("Response")
+                            .font(.headline)
+                        Spacer()
+                        if let code = viewModel.statusCode {
+                            statusBadge(for: code)
+                        }
+                    }
+                    TextEditor(text: .constant(prettyJson(from: viewModel.response)))
+                        .font(.system(.caption2, design: .monospaced))
+                        .scrollDisabled(true)
+                }
             }
         }
-        .padding(.horizontal)
-        .navigationTitle(viewModel.title)
-        .task {
-            do {
-                try await viewModel.getUrl()
-            } catch {
-                print(error)
-            }
+        .navigationTitle(viewModel.requestTemplate.path)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func statusBadge(for code: Int) -> some View {
+        Text("\(code)")
+            .font(.caption.bold())
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(statusColor(for: code))
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .foregroundStyle(.white)
+    }
+
+    private func statusColor(for code: Int) -> Color {
+        switch code {
+        case 200..<300: return .green
+        case 400..<500: return .orange
+        default: return .red
         }
     }
-    
-    private func getJson(from data: Data) -> String {
+
+    private func prettyJson(from data: Data) -> String {
         guard !data.isEmpty else { return "" }
         guard let json = try? JSONSerialization.jsonObject(with: data),
               let prettyData = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted, .sortedKeys]),
               let prettyString = String(data: prettyData, encoding: .utf8) else {
-            return "Invalid JSON"
+            return String(data: data, encoding: .utf8) ?? "Invalid response"
         }
         return prettyString
     }
 }
 
 #Preview {
-//    let jsonString = #"""
-//    {
-//        "id": 37,
-//        "name": "John Doe",
-//        "isActive": true,
-//        "metadata": {
-//            "role": "iOS Developer"
-//        },
-//        "shitter": true
-//    }
-//    """#
-//
-//    let viewModel = RequestTestViewModel(discogsClient: VLDiscogsClient(), title: "Collection", url: URL(string: "https://api.discogs.com/users/vlclienttester/collections/folders")!)
-//    viewModel.response = jsonString.data(using: .utf8)!
-//
-//    return NavigationStack {
-//        RequestTestView(viewModel: viewModel)
+//    NavigationStack {
+//        RequestTestView(viewModel: RequestTestViewModel(
+//            discogsClient: ...,
+//            requestTemplate: Requests.userCollection.values.first!.first!,
+//            username: "testuser"
+//        ))
 //    }
 }

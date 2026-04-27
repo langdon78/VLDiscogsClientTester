@@ -10,13 +10,13 @@ import OrderedCollections
 
 struct RequestListView: View {
     var viewModel: RequestListViewModel
-    
+
     var body: some View {
         List {
             ForEach(Array(viewModel.requests.keys.sorted())) { sectionKey in
                 Section {
                     ForEach(viewModel.requests[sectionKey] ?? []) { requestTemplate in
-                        NavigationLink(value: sectionKey) {
+                        NavigationLink(value: requestTemplate) {
                             requestLabel(for: requestTemplate)
                         }
                     }
@@ -26,11 +26,17 @@ struct RequestListView: View {
             }
         }
         .navigationTitle(viewModel.title)
-        .navigationDestination(for: RequestSection.self) { template in
-            RequestTestView(viewModel: RequestTestViewModel(discogsClient: viewModel.discogsClient, title: template.name))
+        .navigationDestination(for: RequestUrlTemplate.self) { template in
+            RequestTestView(
+                viewModel: RequestTestViewModel(
+                    discogsClient: viewModel.discogsClient,
+                    requestTemplate: template,
+                    username: viewModel.username
+                )
+            )
         }
     }
-    
+
     @ViewBuilder
     private func requestLabel(for requestTemplate: RequestUrlTemplate) -> some View {
         Text("\(requestTemplate.httpMethod.description)")
