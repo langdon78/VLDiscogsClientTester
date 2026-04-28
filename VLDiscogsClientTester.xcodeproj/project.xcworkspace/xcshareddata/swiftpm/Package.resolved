@@ -1,13 +1,31 @@
 {
-  "originHash" : "450e655d41f6f76757cebdd413f9e3a4e195f1230bef87553f9ff34c4d22eb4f",
+  "originHash" : "efa4397dd88b8299757566e50700e9dc13402ebbc76a519e90faf772fb5aaa43",
   "pins" : [
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "7b847a3b7008b2dc2f47ca3110d8c782fb2e5c7e",
-        "version" : "1.3.0"
+        "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
+        "version" : "1.4.1"
+      }
+    },
+    {
+      "identity" : "vldebuglogger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/langdon78/VLDebugLogger",
+      "state" : {
+        "revision" : "ba3a4be42ec13f0721d634f43128d205bd788417",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "vldiscogsclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/langdon78/VLDiscogsClient.git",
+      "state" : {
+        "revision" : "73355949c097fda86f709c7e2afa86318e50b1da",
+        "version" : "0.1.0"
       }
     },
     {
@@ -15,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/langdon78/VLNetworkingClient",
       "state" : {
-        "revision" : "21cde46a6168522e52b7acb226e5b67bcf3d99aa",
-        "version" : "0.1.7-alpha"
+        "revision" : "73262a108a771030d0aa55d1e8b44a2d25d5ca1f",
+        "version" : "0.2.0"
       }
     },
     {
@@ -24,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/langdon78/VLOAuthFlowCoordinator",
       "state" : {
-        "revision" : "98de87ad94af5378feb1cd8faf35523e25ea1fa1",
-        "version" : "0.3.1-alpha"
+        "revision" : "ffb6b6e435891ccd8adb5ce2771f201469355968",
+        "version" : "0.4.0"
       }
     },
     {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BC8371112E50B54000A4E53F /* VLOAuthFlowCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = BC8371102E50B54000A4E53F /* VLOAuthFlowCoordinator */; };
+		BCCA92EA2FA0DBE000D39CEB /* VLDiscogsClient in Frameworks */ = {isa = PBXBuildFile; productRef = BCCA92E92FA0DBE000D39CEB /* VLDiscogsClient */; };
 		BCEF0B3F2ED40E9E00778CA8 /* VLDiscogsClient in Frameworks */ = {isa = PBXBuildFile; productRef = BCEF0B3E2ED40E9E00778CA8 /* VLDiscogsClient */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 			files = (
 				BCEF0B3F2ED40E9E00778CA8 /* VLDiscogsClient in Frameworks */,
 				BC8371112E50B54000A4E53F /* VLOAuthFlowCoordinator in Frameworks */,
+				BCCA92EA2FA0DBE000D39CEB /* VLDiscogsClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				BC8371102E50B54000A4E53F /* VLOAuthFlowCoordinator */,
 				BCEF0B3E2ED40E9E00778CA8 /* VLDiscogsClient */,
+				BCCA92E92FA0DBE000D39CEB /* VLDiscogsClient */,
 			);
 			productName = "oauth-tester";
 			productReference = BC8371012E50B50B00A4E53F /* VLDiscogsClientTester.app */;
@@ -117,7 +120,7 @@
 			mainGroup = BC8370F82E50B50B00A4E53F;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				BCEF0B3D2ED40E9E00778CA8 /* XCLocalSwiftPackageReference "../VLDiscogsClient" */,
+				BCCA92E82FA0DBE000D39CEB /* XCRemoteSwiftPackageReference "VLDiscogsClient" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BC8371022E50B50B00A4E53F /* Products */;
@@ -364,17 +367,26 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		BCEF0B3D2ED40E9E00778CA8 /* XCLocalSwiftPackageReference "../VLDiscogsClient" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../VLDiscogsClient;
+/* Begin XCRemoteSwiftPackageReference section */
+		BCCA92E82FA0DBE000D39CEB /* XCRemoteSwiftPackageReference "VLDiscogsClient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/langdon78/VLDiscogsClient.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		BC8371102E50B54000A4E53F /* VLOAuthFlowCoordinator */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = VLOAuthFlowCoordinator;
+		};
+		BCCA92E92FA0DBE000D39CEB /* VLDiscogsClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BCCA92E82FA0DBE000D39CEB /* XCRemoteSwiftPackageReference "VLDiscogsClient" */;
+			productName = VLDiscogsClient;
 		};
 		BCEF0B3E2ED40E9E00778CA8 /* VLDiscogsClient */ = {
 			isa = XCSwiftPackageProductDependency;
