@@ -61,6 +61,8 @@ struct HomeMenu: View {
 
     static func requestsForItem(_ item: String) -> OrderedDictionary<RequestSection, [RequestUrlTemplate]>? {
         switch item {
+        case "User Identity":
+            return Requests.userIdentity
         case "Database":
             return Requests.database
         case "Marketplace":

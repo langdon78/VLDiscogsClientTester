@@ -54,6 +54,43 @@ struct Requests {
         id: "label_id", name: "Label ID", location: .path, valueType: .int
     )
 
+    // MARK: - User Identity endpoints
+
+    static let userIdentity: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "Identity"): [
+            .init(id: 1, httpMethod: .get, path: "/oauth/identity")
+        ],
+        .init(id: 2, name: "Profile"): [
+            .init(id: 2, httpMethod: .get, path: "/users/{username}",
+                  parameters: [usernameParam]),
+            .init(id: 3, httpMethod: .post, path: "/users/{username}",
+                  parameters: [
+                    usernameParam,
+                    RequestParameter(id: "name", name: "Name", location: .body, isRequired: false),
+                    RequestParameter(id: "home_page", name: "Home Page", location: .body, isRequired: false),
+                    RequestParameter(id: "location", name: "Location", location: .body, isRequired: false),
+                    RequestParameter(id: "profile", name: "Profile", location: .body, isRequired: false),
+                    RequestParameter(id: "curr_abbr", name: "Currency", location: .body, isRequired: false)
+                  ])
+        ],
+        .init(id: 3, name: "Submissions"): [
+            .init(id: 4, httpMethod: .get, path: "/users/{username}/submissions",
+                  parameters: [usernameParam, pageParam, perPageParam])
+        ],
+        .init(id: 4, name: "Contributions"): [
+            .init(id: 5, httpMethod: .get, path: "/users/{username}/contributions",
+                  parameters: [
+                    usernameParam,
+                    RequestParameter(
+                        id: "sort", name: "Sort", location: .query,
+                        valueType: .enumeration(["label", "artist", "title", "catno", "format", "rating", "added", "year"]),
+                        isRequired: false
+                    ),
+                    sortOrderParam, pageParam, perPageParam
+                  ])
+        ]
+    ]
+
     // MARK: - Database endpoints
 
     static let database: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
