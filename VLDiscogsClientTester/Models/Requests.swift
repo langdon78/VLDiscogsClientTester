@@ -151,6 +151,74 @@ struct Requests {
         ]
     ]
 
+    // MARK: - User Wantlist endpoints
+
+    static let userWantlist: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "Wantlist"): [
+            .init(id: 1, httpMethod: .get, path: "/users/{username}/wants",
+                  parameters: [usernameParam, pageParam, perPageParam])
+        ],
+        .init(id: 2, name: "Add to Wantlist"): [
+            .init(id: 2, httpMethod: .put, path: "/users/{username}/wants/{release_id}",
+                  parameters: [
+                    usernameParam, releaseIdParam,
+                    RequestParameter(id: "notes", name: "Notes", location: .body, isRequired: false),
+                    RequestParameter(id: "rating", name: "Rating", location: .body, valueType: .intRange(1...5), isRequired: false)
+                  ])
+        ],
+        .init(id: 3, name: "Edit Wantlist Item"): [
+            .init(id: 3, httpMethod: .post, path: "/users/{username}/wants/{release_id}",
+                  parameters: [
+                    usernameParam, releaseIdParam,
+                    RequestParameter(id: "notes", name: "Notes", location: .body, isRequired: false),
+                    RequestParameter(id: "rating", name: "Rating", location: .body, valueType: .intRange(1...5), isRequired: false)
+                  ])
+        ],
+        .init(id: 4, name: "Delete from Wantlist"): [
+            .init(id: 4, httpMethod: .delete, path: "/users/{username}/wants/{release_id}",
+                  parameters: [usernameParam, releaseIdParam])
+        ]
+    ]
+
+    // MARK: - User Lists endpoints
+
+    private static let listIdParam = RequestParameter(
+        id: "list_id", name: "List ID", location: .path, valueType: .int
+    )
+
+    static let userLists: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "User Lists"): [
+            .init(id: 1, httpMethod: .get, path: "/users/{username}/lists",
+                  parameters: [usernameParam, pageParam, perPageParam])
+        ],
+        .init(id: 2, name: "List Details"): [
+            .init(id: 2, httpMethod: .get, path: "/lists/{list_id}",
+                  parameters: [listIdParam])
+        ]
+    ]
+
+    // MARK: - Inventory Upload endpoints
+
+    static let inventoryUpload: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "Recent Uploads"): [
+            .init(id: 1, httpMethod: .get, path: "/inventory/upload",
+                  parameters: [pageParam, perPageParam])
+        ],
+        .init(id: 2, name: "Get Upload"): [
+            .init(id: 2, httpMethod: .get, path: "/inventory/upload/{id}",
+                  parameters: [RequestParameter(id: "id", name: "Upload ID", location: .path, valueType: .int)])
+        ],
+        .init(id: 3, name: "Upload Inventory"): [
+            .init(id: 3, httpMethod: .post, path: "/inventory/upload/{type}",
+                  parameters: [
+                    RequestParameter(
+                        id: "type", name: "Type", location: .path,
+                        valueType: .enumeration(["add", "change", "delete"])
+                    )
+                  ])
+        ]
+    ]
+
     // MARK: - Inventory Export endpoints
 
     static let inventoryExport: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [

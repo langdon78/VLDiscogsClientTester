@@ -13,7 +13,6 @@ struct HomeMenu: View {
     @ObservedObject var accountManager: AccountManager
     @State var isVisible = false
     let menuItems: [String] = [
-        "Authentication",
         "Database",
         "Marketplace",
         "Inventory Export",
@@ -69,8 +68,14 @@ struct HomeMenu: View {
             return Requests.marketplace
         case "Inventory Export":
             return Requests.inventoryExport
+        case "Inventory Import":
+            return Requests.inventoryUpload
         case "User Collection":
             return Requests.userCollection
+        case "User Wantlist":
+            return Requests.userWantlist
+        case "User Lists":
+            return Requests.userLists
         default:
             return nil
         }
