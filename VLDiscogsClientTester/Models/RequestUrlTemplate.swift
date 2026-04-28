@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import VLDiscogsClient
 
-struct RequestUrlTemplate: Identifiable, Hashable {
+struct RequestUrlTemplate: Identifiable {
+    typealias APIAction = (VLDiscogsClient, [String: String], [RequestParameter.AutoFillKey: String]) async throws -> Data
+
     var id: Int
 
     enum Action {
@@ -38,13 +41,15 @@ struct RequestUrlTemplate: Identifiable, Hashable {
     var path: String
     var parameters: [RequestParameter]
     var action: Action
+    var execute: APIAction?
 
-    init(id: Int, httpMethod: HttpMethod, path: String, parameters: [RequestParameter] = [], action: Action = .request) {
+    init(id: Int, httpMethod: HttpMethod, path: String, parameters: [RequestParameter] = [], action: Action = .request, execute: APIAction? = nil) {
         self.id = id
         self.httpMethod = httpMethod
         self.path = path
         self.parameters = parameters
         self.action = action
+        self.execute = execute
     }
 
     // MARK: - Filtered parameter accessors
@@ -107,5 +112,15 @@ struct RequestUrlTemplate: Identifiable, Hashable {
             }
         }
         return dict
+    }
+}
+
+extension RequestUrlTemplate: Hashable {
+    static func == (lhs: RequestUrlTemplate, rhs: RequestUrlTemplate) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

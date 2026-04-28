@@ -81,8 +81,19 @@ class RequestTestViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            switch requestTemplate.action {
-            case .request:
+            if let execute = requestTemplate.execute {
+                let data = try await execute(discogsClient, parameterValues, autoFillValues)
+                if requestTemplate.action == .downloadFile {
+                    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    let idString = parameterValues["id"] ?? "unknown"
+                    let destination = documentsURL.appendingPathComponent("export_\(idString).csv")
+                    try data.write(to: destination)
+                    self.downloadedFileURL = destination
+                } else {
+                    self.response = data
+                }
+                self.statusCode = 200
+            } else {
                 let resolvedPath = requestTemplate.resolvedPath(values: parameterValues, autoFillValues: autoFillValues)
                 let queryItems = requestTemplate.queryItems(from: parameterValues)
                 let body = requestTemplate.bodyDictionary(from: parameterValues)
@@ -94,23 +105,6 @@ class RequestTestViewModel: ObservableObject {
                 )
                 self.response = response.data ?? Data()
                 self.statusCode = response.statusCode
-
-            case .downloadFile:
-                let resolvedPath = requestTemplate.resolvedPath(values: parameterValues, autoFillValues: autoFillValues)
-                let response = try await discogsClient.request(
-                    method: requestTemplate.httpMethod.rawValue,
-                    path: resolvedPath,
-                    queryParameters: [],
-                    body: nil
-                )
-                self.statusCode = response.statusCode
-                if let data = response.data, !data.isEmpty {
-                    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                    let idString = parameterValues["id"] ?? "unknown"
-                    let destination = documentsURL.appendingPathComponent("export_\(idString).csv")
-                    try data.write(to: destination)
-                    self.downloadedFileURL = destination
-                }
             }
 
         } catch {
