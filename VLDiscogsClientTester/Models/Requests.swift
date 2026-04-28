@@ -114,6 +114,27 @@ struct Requests {
         ]
     ]
 
+    // MARK: - Inventory Export endpoints
+
+    static let inventoryExport: OrderedDictionary<RequestSection, [RequestUrlTemplate]> = [
+        .init(id: 1, name: "Export Inventory"): [
+            .init(id: 1, httpMethod: .post, path: "/inventory/export")
+        ],
+        .init(id: 2, name: "Recent Exports"): [
+            .init(id: 2, httpMethod: .get, path: "/inventory/export",
+                  parameters: [pageParam, perPageParam])
+        ],
+        .init(id: 3, name: "Get Export"): [
+            .init(id: 3, httpMethod: .get, path: "/inventory/export/{id}",
+                  parameters: [RequestParameter(id: "id", name: "Export ID", location: .path, valueType: .int)])
+        ],
+        .init(id: 4, name: "Download Export"): [
+            .init(id: 4, httpMethod: .get, path: "/inventory/export/{id}/download",
+                  parameters: [RequestParameter(id: "id", name: "Export ID", location: .path, valueType: .int)],
+                  action: .downloadFile)
+        ]
+    ]
+
     // MARK: - Marketplace-specific parameters
 
     private static let listingIdParam = RequestParameter(

@@ -20,6 +20,7 @@ class RequestTestViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var response: Data = .init()
     @Published var statusCode: Int?
+    @Published var downloadedFileURL: URL?
 
     private static let baseURL = "https://api.discogs.com"
 
@@ -75,21 +76,42 @@ class RequestTestViewModel: ObservableObject {
         errorMessage = nil
         response = .init()
         statusCode = nil
+        downloadedFileURL = nil
 
         defer { isLoading = false }
 
         do {
-            let resolvedPath = requestTemplate.resolvedPath(values: parameterValues, autoFillValues: autoFillValues)
-            let queryItems = requestTemplate.queryItems(from: parameterValues)
-            let body = requestTemplate.bodyDictionary(from: parameterValues)
-            let response = try await discogsClient.request(
-                method: requestTemplate.httpMethod.rawValue,
-                path: resolvedPath,
-                queryParameters: queryItems,
-                body: body.isEmpty ? nil : body
-            )
-            self.response = response.data ?? Data()
-            self.statusCode = response.statusCode
+            switch requestTemplate.action {
+            case .request:
+                let resolvedPath = requestTemplate.resolvedPath(values: parameterValues, autoFillValues: autoFillValues)
+                let queryItems = requestTemplate.queryItems(from: parameterValues)
+                let body = requestTemplate.bodyDictionary(from: parameterValues)
+                let response = try await discogsClient.request(
+                    method: requestTemplate.httpMethod.rawValue,
+                    path: resolvedPath,
+                    queryParameters: queryItems,
+                    body: body.isEmpty ? nil : body
+                )
+                self.response = response.data ?? Data()
+                self.statusCode = response.statusCode
+
+            case .downloadFile:
+                let resolvedPath = requestTemplate.resolvedPath(values: parameterValues, autoFillValues: autoFillValues)
+                let response = try await discogsClient.request(
+                    method: requestTemplate.httpMethod.rawValue,
+                    path: resolvedPath,
+                    queryParameters: [],
+                    body: nil
+                )
+                self.statusCode = response.statusCode
+                if let data = response.data, !data.isEmpty {
+                    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    let idString = parameterValues["id"] ?? "unknown"
+                    let destination = documentsURL.appendingPathComponent("export_\(idString).csv")
+                    try data.write(to: destination)
+                    self.downloadedFileURL = destination
+                }
+            }
 
         } catch {
             print(error)

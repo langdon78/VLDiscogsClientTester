@@ -9,6 +9,12 @@ import SwiftUI
 
 struct RequestUrlTemplate: Identifiable, Hashable {
     var id: Int
+
+    enum Action {
+        case request
+        case downloadFile
+    }
+
     enum HttpMethod: String {
         case get
         case post
@@ -31,12 +37,14 @@ struct RequestUrlTemplate: Identifiable, Hashable {
     var httpMethod: HttpMethod
     var path: String
     var parameters: [RequestParameter]
+    var action: Action
 
-    init(id: Int, httpMethod: HttpMethod, path: String, parameters: [RequestParameter] = []) {
+    init(id: Int, httpMethod: HttpMethod, path: String, parameters: [RequestParameter] = [], action: Action = .request) {
         self.id = id
         self.httpMethod = httpMethod
         self.path = path
         self.parameters = parameters
+        self.action = action
     }
 
     // MARK: - Filtered parameter accessors

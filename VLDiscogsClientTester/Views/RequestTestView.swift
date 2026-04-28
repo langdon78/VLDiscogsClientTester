@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RequestTestView: View {
     @StateObject var viewModel: RequestTestViewModel
-
     var body: some View {
         Form {
             ParameterFormView(
@@ -52,6 +51,18 @@ struct RequestTestView: View {
                 Section("Error") {
                     Text(errorMessage)
                         .foregroundStyle(.red)
+                }
+            }
+
+            if let fileURL = viewModel.downloadedFileURL {
+                Section("Downloaded File") {
+                    LabeledContent("Location") {
+                        Text(fileURL.lastPathComponent)
+                            .font(.system(.caption, design: .monospaced))
+                    }
+                    ShareLink(item: fileURL) {
+                        Label("Share File", systemImage: "square.and.arrow.up")
+                    }
                 }
             }
 

@@ -65,6 +65,8 @@ struct HomeMenu: View {
             return Requests.database
         case "Marketplace":
             return Requests.marketplace
+        case "Inventory Export":
+            return Requests.inventoryExport
         case "User Collection":
             return Requests.userCollection
         default:
