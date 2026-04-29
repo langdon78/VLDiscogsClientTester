@@ -26,6 +26,7 @@ struct RequestTestView: View {
 
             Section {
                 Button {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     Task {
                         await viewModel.sendRequest()
                     }
@@ -82,6 +83,7 @@ struct RequestTestView: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.immediately)
         .navigationTitle(viewModel.requestTemplate.path)
         .navigationBarTitleDisplayMode(.inline)
     }
