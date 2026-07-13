@@ -110,6 +110,10 @@ iOSInjectionProject/
 **/GoogleService-Info.plist
 **/Config.plist
 
+# Local Discogs credentials (keep the .template checked in, ignore the real file)
+# Bare name so it's ignored wherever the file lives in the project tree.
+Secrets.xcconfig
+
 ## OS Files
 
 # macOS

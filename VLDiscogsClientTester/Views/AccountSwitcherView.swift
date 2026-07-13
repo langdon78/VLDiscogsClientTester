@@ -198,6 +198,8 @@ struct AddAccountView: View {
     NavigationStack {
         AccountSwitcherView(
             accountManager: AccountManager(
+                consumerKey: "preview-consumer-key",
+                consumerSecret: "preview-consumer-secret",
                 callbackUrl: URL(string: "oauth-tester://discogs")!
             )
         )
