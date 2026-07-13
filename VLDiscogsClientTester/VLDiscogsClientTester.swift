@@ -16,6 +16,8 @@ struct VLDiscogsClientTester: App {
     )
     
     @StateObject private var accountManager = AccountManager(
+        consumerKey: Secrets.discogsConsumerKey,
+        consumerSecret: Secrets.discogsConsumerSecret,
         callbackUrl: deepLinkCallback.url
     )
     

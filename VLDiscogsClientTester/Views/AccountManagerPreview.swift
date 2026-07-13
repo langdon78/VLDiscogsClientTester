@@ -13,6 +13,8 @@ extension AccountManager {
     /// Create a mock account manager for previews and testing
     static func mock(withAccounts count: Int = 2) -> AccountManager {
         let manager = AccountManager(
+            consumerKey: "preview-consumer-key",
+            consumerSecret: "preview-consumer-secret",
             callbackUrl: URL(string: "oauth-tester://discogs")!,
             accountStore: MockAccountStore()
         )
